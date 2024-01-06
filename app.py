@@ -34,6 +34,12 @@ url_lis = []
 address_lis = []
 dev_lis = []
 year_lis = []
+
+bed_lis = []
+bath_lis = []
+price_sqm_lis = []
+
+
 price_lis = []
 public_price_lis = []
 area_lis = []
@@ -49,6 +55,7 @@ rec_lis = []
 prov_lis = []
 amphor_lis = []
 about_lis = []
+detail_lis = []
 #tel_lis = []
 #web_lis = []
 count = 0
@@ -78,6 +85,36 @@ for i in range(start_page,end_page+1):
         #     time.sleep(2)
         
         soupx = BeautifulSoup(driver.page_source,'html.parser')
+
+        detail = [ item.text for item in driver.find_element(By.CSS_SELECTOR,'ul').find_elements(By.CSS_SELECTOR,'li')]
+        
+        detail_data = "\n".join(detail)
+        print(detail_data)
+        detail_lis.append(detail_data)
+
+        #bedroom
+        bedroom = detail[0]
+        print("bed : ",bedroom)
+        bed_lis.append(bedroom)
+
+        #bathroom 
+        bath = detail[1]
+        print("bathroom : ",bath)
+        bath_lis.append(bath)
+
+        #sqm 
+        area = detail[2]
+        print("area : ",area)
+        area_lis.append(area)
+
+        # floor = detail[3]
+        # print("floor : ",floor)
+        # total_floor_lis.append(floor)
+
+        # price_per_sqm = detail[4]
+        # print("Price per sqm : ",price_per_sqm)
+        # price_sqm_lis.append(price_sqm_lis)
+
 
         #ชื่อโครงการ
         title = driver.find_element(By.CSS_SELECTOR,"h1.leading-snug")
@@ -136,11 +173,15 @@ df = pd.DataFrame()
 
 df['ชื่อโครงการ'] = title_lis 
 df['ลิงค์'] = url_lis 
+df['จำนวนห้องนอน'] = bed_lis 
+df['จำนวนห้องน้ำ'] = bath_lis 
+df['พื้นที่'] = area_lis 
+df['รายละเอียด'] = detail_lis
 df['ที่อยู่เต็ม'] = address_lis 
 df['ราคาเปิดตัว'] = price_lis 
 df['Latitude'] = lat_lis 
 df['Longtitude'] = long_lis
-df['รายละเอียด'] = about_lis
+df['เกี่ยวกับ'] = about_lis
 #df['Web'] = web_lis
 #df['โทร'] = tel_lis
 
